@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4kvisione - Portfolio</title>
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+    
     <style>
         body {
             margin: 0;
@@ -311,7 +314,6 @@
             }
         });
 
-        // Nasconde dinamicamente gli elementi multimediali non trovati localmente
         document.querySelectorAll('.grid-item img').forEach(img => {
             img.onerror = function() { this.closest('.grid-item').style.display = 'none'; };
         });
