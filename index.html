@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4kvisione - Portfolio</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+        header {
+            padding: 40px 20px 20px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 18px;
+            font-weight: 400;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        h1 a {
+            color: #000000;
+            text-transform: lowercase;
+            text-decoration: none;
+            display: inline-block;
+        }
+        h1 a:visited, h1 a:hover, h1 a:active {
+            color: #000000;
+            text-decoration: none;
+        }
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .grid-container {
+            column-count: 3;
+            column-gap: 20px;
+        }
+        .grid-item {
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 20px;
+            border-radius: 2px;
+            cursor: pointer;
+            break-inside: avoid;
+            background-color: #f7f7f7;
+        }
+        /* Uniformiamo la grafica di foto e video nella griglia */
+        .grid-item img, .grid-item video {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: opacity 0.3s ease;
+        }
+        .grid-item img:hover, .grid-item video:hover {
+            opacity: 0.85;
+        }
+
+        /* Regole per nascondere i file mancanti */
+        .grid-item img:not([src]), .grid-item img[src=""], .grid-item img:invalid,
+        .grid-item video:not([src]), .grid-item video[src=""] {
+            display: none !important;
+        }
+        
+        /* Schermata Schermo Intero (Lightbox) */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+        }
+        .lightbox-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1001;
+        }
+        .lightbox-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 40px 40px 40px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        /* Elementi multimediali adattivi a tutto schermo */
+        .lightbox-content img, .lightbox-content video {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            user-select: none;
+            box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.05);
+            z-index: 1002;
+            position: relative;
+            background: #ffffff;
+        }
+        .close-btn {
+            position: absolute;
+            top: 35px;
+            left: 35px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s ease;
+            z-index: 1003;
+        }
+        .close-btn:hover { opacity: 0.5; }
+        .close-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: #000000;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        @media (max-width: 900px) {
+            .grid-container { column-count: 2; column-gap: 15px; }
+            .grid-item { margin-bottom: 15px; }
+        }
+        @media (max-width: 600px) {
+            .grid-container { column-count: 1; column-gap: 10px; }
+            .grid-item { margin-bottom: 10px; }
+            header { padding: 20px 15px 10px 15px; }
+            main { padding: 15px; }
+            .close-btn { top: 20px; left: 20px; }
+            .lightbox-content { padding: 80px 20px 20px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><a href="https://www.instagram.com/4kvisione" target="_blank">4kvisione</a></h1>
+    </header>
+
+    <main>
+        <div class="grid-container">
+            
+            <div class="grid-item" onclick="openLightbox('immagini/foto1.mp4', 'video')">
+                <video src="immagini/foto1.mp4" autoplay loop muted playsinline></video>
+            </div>
+            
+            <div class="grid-item" onclick="openLightbox('immagini/foto2.mp4', 'video')">
+                <video src="immagini/foto2.mp4" autoplay loop muted playsinline></video>
+            </div>
+
+            <div class="grid-item" onclick="openLightbox('immagini/foto3.jpg', 'image')"><img src="immagini/foto3.jpg" alt="Foto 3"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto4.jpg', 'image')"><img src="immagini/foto4.jpg" alt="Foto 4"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto5.jpg', 'image')"><img src="immagini/foto5.jpg" alt="Foto 5"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto6.jpg', 'image')"><img src="immagini/foto6.jpg" alt="Foto 6"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto7.jpg', 'image')"><img src="immagini/foto7.jpg" alt="Foto 7"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto8.jpg', 'image')"><img src="immagini/foto8.jpg" alt="Foto 8"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto9.jpg', 'image')"><img src="immagini/foto9.jpg" alt="Foto 9"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto10.jpg', 'image')"><img src="immagini/foto10.jpg" alt="Foto 10"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto11.jpg', 'image')"><img src="immagini/foto11.jpg" alt="Foto 11"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto12.jpg', 'image')"><img src="immagini/foto12.jpg" alt="Foto 12"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto13.jpg', 'image')"><img src="immagini/foto13.jpg" alt="Foto 13"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto14.jpg', 'image')"><img src="immagini/foto14.jpg" alt="Foto 14"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto15.jpg', 'image')"><img src="immagini/foto15.jpg" alt="Foto 15"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto16.jpg', 'image')"><img src="immagini/foto16.jpg" alt="Foto 16"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto17.jpg', 'image')"><img src="immagini/foto17.jpg" alt="Foto 17"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto18.jpg', 'image')"><img src="immagini/foto18.jpg" alt="Foto 18"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto19.jpg', 'image')"><img src="immagini/foto19.jpg" alt="Foto 19"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto20.jpg', 'image')"><img src="immagini/foto20.jpg" alt="Foto 20"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto21.jpg', 'image')"><img src="immagini/foto21.jpg" alt="Foto 21"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto22.jpg', 'image')"><img src="immagini/foto22.jpg" alt="Foto 22"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto23.jpg', 'image')"><img src="immagini/foto23.jpg" alt="Foto 23"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto24.jpg', 'image')"><img src="immagini/foto24.jpg" alt="Foto 24"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto25.jpg', 'image')"><img src="immagini/foto25.jpg" alt="Foto 25"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto26.jpg', 'image')"><img src="immagini/foto26.jpg" alt="Foto 26"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto27.jpg', 'image')"><img src="immagini/foto27.jpg" alt="Foto 27"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto28.jpg', 'image')"><img src="immagini/foto28.jpg" alt="Foto 28"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto29.jpg', 'image')"><img src="immagini/foto29.jpg" alt="Foto 29"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto30.jpg', 'image')"><img src="immagini/foto30.jpg" alt="Foto 30"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto31.jpg', 'image')"><img src="immagini/foto31.jpg" alt="Foto 31"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto32.jpg', 'image')"><img src="immagini/foto32.jpg" alt="Foto 32"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto33.jpg', 'image')"><img src="immagini/foto33.jpg" alt="Foto 33"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto34.jpg', 'image')"><img src="immagini/foto34.jpg" alt="Foto 34"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto35.jpg', 'image')"><img src="immagini/foto35.jpg" alt="Foto 35"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto36.jpg', 'image')"><img src="immagini/foto36.jpg" alt="Foto 36"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto37.jpg', 'image')"><img src="immagini/foto37.jpg" alt="Foto 37"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto38.jpg', 'image')"><img src="immagini/foto38.jpg" alt="Foto 38"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto39.jpg', 'image')"><img src="immagini/foto39.jpg" alt="Foto 39"></div>
+            <div class="grid-item" onclick="openLightbox('immagini/foto40.jpg', 'image')"><img src="immagini/foto40.jpg" alt="Foto 40"></div>
+        </div>
+    </main>
+
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-overlay" onclick="forceCloseLightbox()"></div>
+        <div class="lightbox-content">
+            <button class="close-btn" onclick="forceCloseLightbox()" aria-label="Torna indietro">
+                <svg viewBox="0 0 24 24">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </button>
+            <div id="lightbox-target" style="width:100%; height:100%; display:flex; justify-content:center; align-items:center;"></div>
+        </div>
+    </div>
+
+    <script>
+        var lightbox = document.getElementById('lightbox');
+        var lightboxTarget = document.getElementById('lightbox-target');
+
+        function openLightbox(src, type) {
+            if (!lightbox || !lightboxTarget) return;
+            
+            // Svuota il vecchio contenuto
+            lightboxTarget.innerHTML = '';
+            
+            if (type === 'video') {
+                // Se è un video, crea il tag video con i controlli attivi e audio abilitato
+                var videoEl = document.createElement('video');
+                videoEl.src = src;
+                videoEl.controls = true;
+                videoEl.autoplay = true;
+                lightboxTarget.appendChild(videoEl);
+            } else {
+                // Se è un'immagine, crea il classico tag img
+                var imgEl = document.createElement('img');
+                imgEl.src = src;
+                lightboxTarget.appendChild(imgEl);
+            }
+            
+            lightbox.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function forceCloseLightbox() {
+            if (lightbox && lightboxTarget) {
+                lightbox.style.display = 'none';
+                lightboxTarget.innerHTML = ''; // Svuota il contenuto e stoppa i video in riproduzione
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Gestione degli errori di caricamento per nascondere i file vuoti locali
+        document.querySelectorAll('.grid-item img').forEach(img => {
+            img.onerror = function() { this.closest('.grid-item').style.display = 'none'; };
+        });
+        document.querySelectorAll('.grid-item video').forEach(vid => {
+            vid.onerror = function() { this.closest('.grid-item').style.display = 'none'; };
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') { forceCloseLightbox(); }
+        });
+    </script>
+
+</body>
+</html>
