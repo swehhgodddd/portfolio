@@ -162,7 +162,7 @@
     </header>
 
     <main>
-        <div class="grid-container">
+        <div class="grid-container" id="grid-container">
             
             <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto1.mp4" autoplay loop muted playsinline></video></div>
             <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto2.mp4" autoplay loop muted playsinline></video></div>
@@ -235,12 +235,32 @@
         var currentGroupItems = [];
         var currentIndex = 0;
 
+        // 🎲 FUNZIONE PER MESCOLARE GLI ELEMENTI IN MODO CASUALE (SHUFFLE)
+        function shuffleGrid() {
+            var container = document.getElementById('grid-container');
+            if (!container) return;
+            
+            var items = Array.from(container.children);
+            
+            // Algoritmo di Fisher-Yates per il massimo disordine casuale
+            for (var i = items.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                container.appendChild(items[j]);
+            }
+        }
+
+        // Esegui lo shuffle appena il codice è pronto nella pagina
+        window.addEventListener('DOMContentLoaded', function() {
+            shuffleGrid();
+        });
+
         function openLightbox(element, type) {
             if (!lightbox || !lightboxTarget) return;
             
             var groupName = element.getAttribute('data-group');
             
             if (groupName) {
+                // Prende gli elementi del carosello rispettando il NUOVO ordine casuale della griglia
                 currentGroupItems = Array.from(document.querySelectorAll('.grid-item[data-group="' + groupName + '"]')).filter(el => el.style.display !== 'none');
                 currentIndex = currentGroupItems.indexOf(element);
                 
