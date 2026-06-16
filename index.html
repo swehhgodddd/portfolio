@@ -18,6 +18,10 @@
             padding: 40px 20px 20px 20px;
             max-width: 1200px;
             margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
         }
         h1 {
             font-size: 18px;
@@ -35,6 +39,31 @@
             color: #000000;
             text-decoration: none;
         }
+
+        /* 🎵 Pulsante Mute Audio in alto a destra */
+        .audio-toggle-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s ease;
+        }
+        .audio-toggle-btn:hover {
+            opacity: 0.6;
+        }
+        .audio-toggle-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: #000000;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
         main {
             max-width: 1200px;
             margin: 0 auto;
@@ -157,8 +186,17 @@
 </head>
 <body>
 
+    <audio id="bg-music" src="musica.mp3" loop></audio>
+
     <header>
         <h1><a href="https://www.instagram.com/4kvisione" target="_blank">4kvisione</a></h1>
+        
+        <button class="audio-toggle-btn" id="audio-btn" aria-label="Attiva/Disattiva musica">
+            <svg id="audio-icon" viewBox="0 0 24 24">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+        </button>
     </header>
 
     <main>
@@ -235,6 +273,46 @@
         var currentGroupItems = [];
         var currentIndex = 0;
 
+        // Variabili per la gestione della musica di sottofondo
+        var bgMusic = document.getElementById('bg-music');
+        var audioBtn = document.getElementById('audio-btn');
+        var audioIcon = document.getElementById('audio-icon');
+        var isMutedByUser = false; 
+        var musicWasPlayingBeforeVideo = false;
+
+        // Codice SVG per l'icona Audio Attivo (altoparlante + onde)
+        var audioOnSVG = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+        // Codice SVG per l'icona Muto (altoparlante + una X di blocco)
+        var audioOffSVG = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>';
+
+        // Fai partire la musica al primo click dell'utente sulla pagina (regola salvavita per i browser)
+        function startMusicOnFirstInteraction() {
+            if (bgMusic && bgMusic.paused && !isMutedByUser) {
+                bgMusic.play().catch(function(error) {
+                    console.log("Autoplay bloccato temporaneamente dal browser. In attesa di interazione.");
+                });
+            }
+            // Rimuove l'ascolto dell'evento per evitare controlli inutili dopo la prima attivazione
+            document.removeEventListener('click', startMusicOnFirstInteraction);
+        }
+        document.addEventListener('click', startMusicOnFirstInteraction);
+
+        // Controllo manuale del pulsante Mute in alto a destra
+        if (audioBtn && bgMusic) {
+            audioBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Evita di attivare altre funzioni di click sulla pagina
+                if (bgMusic.paused) {
+                    bgMusic.play();
+                    audioIcon.innerHTML = audioOnSVG;
+                    isMutedByUser = false;
+                } else {
+                    bgMusic.pause();
+                    audioIcon.innerHTML = audioOffSVG;
+                    isMutedByUser = true;
+                }
+            });
+        }
+
         // 🎲 FUNZIONE PER MESCOLARE GLI ELEMENTI IN MODO CASUALE (SHUFFLE)
         function shuffleGrid() {
             var container = document.getElementById('grid-container');
@@ -242,14 +320,12 @@
             
             var items = Array.from(container.children);
             
-            // Algoritmo di Fisher-Yates per il massimo disordine casuale
             for (var i = items.length - 1; i > 0; i--) {
                 var j = Math.floor(Math.random() * (i + 1));
                 container.appendChild(items[j]);
             }
         }
 
-        // Esegui lo shuffle appena il codice è pronto nella pagina
         window.addEventListener('DOMContentLoaded', function() {
             shuffleGrid();
         });
@@ -260,7 +336,6 @@
             var groupName = element.getAttribute('data-group');
             
             if (groupName) {
-                // Prende gli elementi del carosello rispettando il NUOVO ordine casuale della griglia
                 currentGroupItems = Array.from(document.querySelectorAll('.grid-item[data-group="' + groupName + '"]')).filter(el => el.style.display !== 'none');
                 currentIndex = currentGroupItems.indexOf(element);
                 
@@ -292,12 +367,27 @@
             var imageSource = activeElement.querySelector('img');
 
             if (videoSource) {
+                // 🛑 SE SI APRE UN VIDEO: Se la musica sta suonando, la salviamo e la stoppiamo
+                if (bgMusic && !bgMusic.paused) {
+                    musicWasPlayingBeforeVideo = true;
+                    bgMusic.pause();
+                } else if (!musicWasPlayingBeforeVideo) {
+                    musicWasPlayingBeforeVideo = false;
+                }
+
                 var videoEl = document.createElement('video');
                 videoEl.src = videoSource.getAttribute('src');
                 videoEl.controls = true;
                 videoEl.autoplay = true;
                 lightboxTarget.appendChild(videoEl);
             } else if (imageSource) {
+                // 📷 SE SI APRE UNA FOTO (anche durante lo scorrimento di un carosello): 
+                // Se la musica era stata interrotta da un video precedente, la facciamo ripartire
+                if (bgMusic && musicWasPlayingBeforeVideo && !isMutedByUser) {
+                    bgMusic.play();
+                    musicWasPlayingBeforeVideo = false;
+                }
+
                 var imgEl = document.createElement('img');
                 imgEl.src = imageSource.getAttribute('src');
                 lightboxTarget.appendChild(imgEl);
@@ -320,6 +410,12 @@
                 lightbox.style.display = 'none';
                 lightboxTarget.innerHTML = '';
                 document.body.style.overflow = 'auto';
+
+                // 🔊 QUANDO SI CHIUDE IL LIGHTBOX: Se la musica era attiva prima del video, riprendi il loop
+                if (bgMusic && musicWasPlayingBeforeVideo && !isMutedByUser) {
+                    bgMusic.play();
+                }
+                musicWasPlayingBeforeVideo = false;
             }
         }
 
