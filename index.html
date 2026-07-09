@@ -6,90 +6,150 @@
     <title>4kvisione - Portfolio</title>
     
     <link rel="icon" type="image/png" href="favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     
     <style>
+        :root {
+            --bg-color: #FAFAFB;
+            --surface-color: #FFFFFF;
+            --text-color: #1A1A1A;
+            --accent-color: #000000;
+            --card-radius: 16px;
+            --transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
         body {
             margin: 0;
             padding: 0;
-            background-color: #ffffff;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-color);
+            -webkit-font-smoothing: antialiased;
         }
+
+        /* Header con effetto Glassmorphism */
         header {
-            padding: 40px 20px 20px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 20px 40px;
+            background: rgba(250, 250, 251, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-sizing: border-box;
-        }
-        h1 {
-            font-size: 18px;
-            font-weight: 400;
-            margin: 0;
-            letter-spacing: 1px;
-        }
-        h1 a {
-            color: #000000;
-            text-transform: lowercase;
-            text-decoration: none;
-            display: inline-block;
-        }
-        h1 a:visited, h1 a:hover, h1 a:active {
-            color: #000000;
-            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
         }
 
-        /* 🎵 Pulsante Mute Audio in alto a destra */
+        h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        h1 a {
+            color: var(--text-color);
+            text-transform: lowercase;
+            text-decoration: none;
+            position: relative;
+        }
+
+        /* Effetto hover elegante sul titolo */
+        h1 a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--text-color);
+            transition: width var(--transition);
+        }
+        h1 a:hover::after { width: 100%; }
+
+        /* Pulsante Audio Migliorato */
         .audio-toggle-btn {
-            background: none;
-            border: none;
+            background: var(--surface-color);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
             cursor: pointer;
-            padding: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.2s ease;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
         .audio-toggle-btn:hover {
-            opacity: 0.6;
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.06);
         }
         .audio-toggle-btn svg {
             width: 20px;
             height: 20px;
             fill: none;
-            stroke: #000000;
+            stroke: var(--accent-color);
             stroke-width: 2;
             stroke-linecap: round;
             stroke-linejoin: round;
+            transition: var(--transition);
         }
 
         main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 40px;
         }
+
+        /* Griglia Masonry Moderna */
         .grid-container {
-            column-count: 3;
-            column-gap: 20px;
+            column-count: 4;
+            column-gap: 24px;
         }
+
         .grid-item {
             display: inline-block;
             width: 100%;
-            margin-bottom: 20px;
-            border-radius: 2px;
+            margin-bottom: 24px;
+            border-radius: var(--card-radius);
             cursor: pointer;
             break-inside: avoid;
-            background-color: #f7f7f7;
+            background-color: var(--surface-color);
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
         }
+
+        /* Animazione di ingresso sfalsata */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .grid-item:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+        }
+
         .grid-item img, .grid-item video {
             width: 100%;
             height: auto;
             display: block;
-            transition: opacity 0.3s ease;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .grid-item img:hover, .grid-item video:hover {
-            opacity: 0.85;
+
+        .grid-item:hover img, .grid-item:hover video {
+            transform: scale(1.03);
         }
 
         /* Nasconde i file vuoti locali */
@@ -98,7 +158,7 @@
             display: none !important;
         }
         
-        /* Schermata Schermo Intero (Lightbox) */
+        /* Lightbox Premium (Glassmorphism) */
         .lightbox {
             display: none;
             position: fixed;
@@ -107,8 +167,16 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: #ffffff;
+            background-color: rgba(250, 250, 251, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
+        .lightbox.show {
+            opacity: 1;
+        }
+
         .lightbox-overlay {
             position: absolute;
             top: 0;
@@ -117,70 +185,95 @@
             height: 100%;
             z-index: 1001;
         }
+
         .lightbox-content {
             width: 100%;
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 60px 80px 40px 80px;
+            padding: 40px;
             box-sizing: border-box;
             position: relative;
         }
+
         .lightbox-content img, .lightbox-content video {
-            max-width: 100%;
-            max-height: 100%;
+            max-width: 90%;
+            max-height: 90vh;
             width: auto;
             height: auto;
             object-fit: contain;
             user-select: none;
-            box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
             z-index: 1002;
             position: relative;
-            background: #ffffff;
+            background: transparent;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .lightbox.show .lightbox-content img, 
+        .lightbox.show .lightbox-content video {
+            transform: scale(1);
         }
 
-        /* Pulsanti di navigazione */
+        /* Pulsanti di navigazione Lightbox */
         .nav-btn {
             position: absolute;
-            background: none;
-            border: none;
+            background: var(--surface-color);
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
             cursor: pointer;
-            padding: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.2s ease;
+            transition: var(--transition);
             z-index: 1003;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
         }
-        .nav-btn:hover { opacity: 0.5; }
+        .nav-btn:hover { 
+            transform: scale(1.1);
+            background: var(--text-color);
+        }
+        .nav-btn:hover svg { stroke: var(--surface-color); }
+        
         .nav-btn svg {
             width: 24px;
             height: 24px;
-            stroke: #000000;
+            stroke: var(--text-color);
             stroke-width: 2;
             fill: none;
             stroke-linecap: round;
             stroke-linejoin: round;
+            transition: var(--transition);
         }
 
-        .close-btn { top: 35px; left: 35px; }
-        .prev-btn { left: 35px; top: 50%; transform: translateY(-50%); display: none; }
-        .next-btn { right: 35px; top: 50%; transform: translateY(-50%); display: none; }
+        .close-btn { top: 30px; right: 40px; }
+        .prev-btn { left: 40px; top: 50%; transform: translateY(-50%); }
+        .next-btn { right: 40px; top: 50%; transform: translateY(-50%); }
 
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .grid-container { column-count: 3; }
+        }
         @media (max-width: 900px) {
-            .grid-container { column-count: 2; column-gap: 15px; }
-            .grid-item { margin-bottom: 15px; }
+            .grid-container { column-count: 2; column-gap: 20px; }
+            header { padding: 15px 25px; }
+            main { padding: 0 25px; margin: 30px auto; }
         }
         @media (max-width: 600px) {
-            .grid-container { column-count: 1; column-gap: 10px; }
-            .grid-item { margin-bottom: 10px; }
-            header { padding: 20px 15px 10px 15px; }
-            main { padding: 15px; }
-            .close-btn { top: 20px; left: 20px; }
-            .prev-btn { left: 15px; }
-            .next-btn { right: 15px; }
-            .lightbox-content { padding: 80px 20px 20px 20px; }
+            .grid-container { column-count: 1; column-gap: 15px; }
+            .grid-item { margin-bottom: 15px; }
+            header { padding: 15px 20px; }
+            main { padding: 0 20px; margin: 20px auto; }
+            
+            .nav-btn { width: 40px; height: 40px; }
+            .close-btn { top: 20px; right: 20px; }
+            .prev-btn { left: 10px; }
+            .next-btn { right: 10px; }
+            .lightbox-content { padding: 20px; }
         }
     </style>
 </head>
@@ -201,48 +294,47 @@
 
     <main>
         <div class="grid-container" id="grid-container">
-            
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto1.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto2.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto3.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto4.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto5.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto6.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto7.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto8.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto9.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto10.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto11.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto12.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto13.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto14.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto15.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto16.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto17.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto18.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto19.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this, 'video')"><video src="immagini/foto20.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto1.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto2.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto3.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto4.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto5.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto6.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto7.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto8.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto9.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto10.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto11.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto12.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto13.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto14.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto15.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto16.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto17.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto18.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto19.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto20.mp4" autoplay loop muted playsinline></video></div>
 
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto21.webp" alt="Foto 21" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto22.webp" alt="Foto 22" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto23.webp" alt="Foto 23" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto24.webp" alt="Foto 24" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto25.webp" alt="Foto 25" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto26.webp" alt="Foto 26" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto27.webp" alt="Foto 27" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto28.webp" alt="Foto 28" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto29.webp" alt="Foto 29" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto30.webp" alt="Foto 30" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto31.webp" alt="Foto 31" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto32.webp" alt="Foto 32" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto33.webp" alt="Foto 33" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto34.webp" alt="Foto 34" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto35.webp" alt="Foto 35" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto36.webp" alt="Foto 36" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto37.webp" alt="Foto 37" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto38.webp" alt="Foto 38" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto39.webp" alt="Foto 39" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this, 'image')"><img src="immagini/foto40.webp" alt="Foto 40" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto21.webp" alt="Foto 21" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto22.webp" alt="Foto 22" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto23.webp" alt="Foto 23" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto24.webp" alt="Foto 24" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto25.webp" alt="Foto 25" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto26.webp" alt="Foto 26" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto27.webp" alt="Foto 27" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto28.webp" alt="Foto 28" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto29.webp" alt="Foto 29" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto30.webp" alt="Foto 30" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto31.webp" alt="Foto 31" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto32.webp" alt="Foto 32" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto33.webp" alt="Foto 33" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto34.webp" alt="Foto 34" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto35.webp" alt="Foto 35" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto36.webp" alt="Foto 36" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto37.webp" alt="Foto 37" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto38.webp" alt="Foto 38" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto39.webp" alt="Foto 39" loading="lazy"></div>
+            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto40.webp" alt="Foto 40" loading="lazy"></div>
             
         </div>
     </main>
@@ -273,30 +365,25 @@
         var currentGroupItems = [];
         var currentIndex = 0;
 
-        // Variabili per la gestione della musica di sottofondo
         var bgMusic = document.getElementById('bg-music');
         var audioBtn = document.getElementById('audio-btn');
         var audioIcon = document.getElementById('audio-icon');
         var isMutedByUser = false; 
         var musicWasPlayingBeforeVideo = false;
 
-        // Codice SVG per l'icona Audio Attivo (altoparlante + onde)
         var audioOnSVG = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
-        // Codice SVG per l'icona Muto (altoparlante + una X di blocco)
         var audioOffSVG = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>';
 
-        // Fai partire la musica al primo click dell'utente sulla pagina (regola salvavita per i browser)
         function startMusicOnFirstInteraction() {
             if (bgMusic && bgMusic.paused && !isMutedByUser) {
                 bgMusic.play().catch(function(error) {
-                    console.log("Autoplay bloccato temporaneamente dal browser. In attesa di interazione.");
+                    console.log("Autoplay bloccato temporaneamente.");
                 });
             }
             document.removeEventListener('click', startMusicOnFirstInteraction);
         }
         document.addEventListener('click', startMusicOnFirstInteraction);
 
-        // Controllo manuale del pulsante Mute in alto a destra
         if (audioBtn && bgMusic) {
             audioBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -312,7 +399,7 @@
             });
         }
 
-        // 🎲 FUNZIONE PER MESCOLARE GLI ELEMENTI IN MODO CASUALE (SHUFFLE)
+        // Shuffle con aggiunta di delay per le animazioni
         function shuffleGrid() {
             var container = document.getElementById('grid-container');
             if (!container) return;
@@ -323,37 +410,41 @@
                 var j = Math.floor(Math.random() * (i + 1));
                 container.appendChild(items[j]);
             }
+            
+            // Assegna un delay crescente per l'animazione di entrata
+            items = Array.from(container.children);
+            items.forEach((item, index) => {
+                item.style.animationDelay = `${index * 0.05}s`;
+            });
         }
 
         window.addEventListener('DOMContentLoaded', function() {
             shuffleGrid();
         });
 
-        function openLightbox(element, type) {
+        function openLightbox(element) {
             if (!lightbox || !lightboxTarget) return;
             
-            var groupName = element.getAttribute('data-group');
+            // Crea una galleria globale con tutti gli elementi visibili
+            currentGroupItems = Array.from(document.querySelectorAll('.grid-item')).filter(el => el.style.display !== 'none');
+            currentIndex = currentGroupItems.indexOf(element);
             
-            if (groupName) {
-                currentGroupItems = Array.from(document.querySelectorAll('.grid-item[data-group="' + groupName + '"]')).filter(el => el.style.display !== 'none');
-                currentIndex = currentGroupItems.indexOf(element);
-                
-                if (currentGroupItems.length > 1) {
-                    prevBtn.style.display = 'flex';
-                    nextBtn.style.display = 'flex';
-                } else {
-                    prevBtn.style.display = 'none';
-                    nextBtn.style.display = 'none';
-                }
+            if (currentGroupItems.length > 1) {
+                prevBtn.style.display = 'flex';
+                nextBtn.style.display = 'flex';
             } else {
-                currentGroupItems = [element];
-                currentIndex = 0;
                 prevBtn.style.display = 'none';
                 nextBtn.style.display = 'none';
             }
 
             renderMedia();
             lightbox.style.display = 'block';
+            
+            // Piccolo delay per l'animazione di comparsa del lightbox
+            setTimeout(() => {
+                lightbox.classList.add('show');
+            }, 10);
+            
             document.body.style.overflow = 'hidden';
         }
 
@@ -403,14 +494,18 @@
 
         function forceCloseLightbox() {
             if (lightbox && lightboxTarget) {
-                lightbox.style.display = 'none';
-                lightboxTarget.innerHTML = '';
-                document.body.style.overflow = 'auto';
+                lightbox.classList.remove('show');
+                
+                setTimeout(() => {
+                    lightbox.style.display = 'none';
+                    lightboxTarget.innerHTML = '';
+                    document.body.style.overflow = 'auto';
 
-                if (bgMusic && musicWasPlayingBeforeVideo && !isMutedByUser) {
-                    bgMusic.play();
-                }
-                musicWasPlayingBeforeVideo = false;
+                    if (bgMusic && musicWasPlayingBeforeVideo && !isMutedByUser) {
+                        bgMusic.play();
+                    }
+                    musicWasPlayingBeforeVideo = false;
+                }, 300); // Aspetta la fine della transizione prima di nascondere
             }
         }
 
