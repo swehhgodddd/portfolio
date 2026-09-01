@@ -27,7 +27,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Header con effetto Glassmorphism */
         header {
             position: sticky;
             top: 0;
@@ -48,6 +47,7 @@
             font-weight: 600;
             margin: 0;
             letter-spacing: -0.5px;
+            flex: 1;
         }
 
         h1 a {
@@ -57,7 +57,6 @@
             position: relative;
         }
 
-        /* Effetto hover elegante sul titolo */
         h1 a::after {
             content: '';
             position: absolute;
@@ -70,7 +69,46 @@
         }
         h1 a:hover::after { width: 100%; }
 
-        /* Pulsante Audio Migliorato */
+        /* --- BARRA DI NAVIGAZIONE (FILTRI) --- */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.04);
+            padding: 6px;
+            border-radius: 24px;
+            flex-shrink: 0;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 8px 20px;
+            border-radius: 18px;
+            transition: var(--transition);
+            opacity: 0.6;
+        }
+
+        .filter-btn.active {
+            opacity: 1;
+            background: var(--surface-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .filter-btn:hover:not(.active) {
+            opacity: 0.8;
+        }
+
+        .header-actions {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
         .audio-toggle-btn {
             background: var(--surface-color);
             border: 1px solid rgba(0,0,0,0.1);
@@ -105,7 +143,7 @@
             padding: 0 40px;
         }
 
-        /* Griglia Masonry Moderna */
+        /* Griglia Masonry */
         .grid-container {
             column-count: 4;
             column-gap: 24px;
@@ -117,27 +155,32 @@
             margin-bottom: 24px;
             border-radius: var(--card-radius);
             cursor: pointer;
-            break-inside: avoid;
             background-color: var(--surface-color);
             overflow: hidden;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-            transition: var(--transition);
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.6s ease forwards;
+            
+            /* Previene il taglio degli elementi tra una colonna e l'altra */
+            -webkit-column-break-inside: avoid;
+            page-break-inside: avoid;
+            break-inside: avoid;
+            
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0; /* Partono invisibili, l'animazione li fa apparire */
         }
 
-        /* Animazione di ingresso sfalsata */
         @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .grid-item:hover {
             transform: translateY(-5px) scale(1.01);
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estetica Alt-text: nasconde il testo mentre l'immagine carica */
+        .grid-item img {
+            color: transparent;
         }
 
         .grid-item img, .grid-item video {
@@ -152,13 +195,97 @@
             transform: scale(1.03);
         }
 
-        /* Nasconde i file vuoti locali */
-        .grid-item img:not([src]), .grid-item img[src=""], .grid-item img:invalid,
-        .grid-item video:not([src]), .grid-item video[src=""] {
+        /* Regole assolute per nascondere media rotti/vuoti */
+        .broken-media {
             display: none !important;
         }
         
-        /* Lightbox Premium (Glassmorphism) */
+        /* --- SEZIONE POST-IT --- */
+        .postit-section {
+            max-width: 1400px;
+            margin: 60px auto;
+            padding: 40px;
+            background: rgba(250, 250, 251, 0.5);
+            border-radius: var(--card-radius);
+            border: 1px dashed rgba(0,0,0,0.2);
+        }
+
+        .postit-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .postit-form {
+            display: flex;
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto 40px auto;
+        }
+
+        .postit-form input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .postit-form input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .postit-form button {
+            background: var(--accent-color);
+            color: var(--surface-color);
+            border: none;
+            padding: 0 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .postit-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .postit-board {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .postit-note {
+            width: 160px;
+            min-height: 160px;
+            padding: 20px;
+            background: #fdfd96; 
+            box-shadow: 2px 4px 8px rgba(0,0,0,0.08);
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            font-size: 15px;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            word-wrap: break-word;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: default;
+        }
+
+        .postit-note:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            z-index: 10;
+            box-shadow: 4px 8px 16px rgba(0,0,0,0.12);
+        }
+
+        /* Lightbox */
         .lightbox {
             display: none;
             position: fixed;
@@ -217,7 +344,6 @@
             transform: scale(1);
         }
 
-        /* Pulsanti di navigazione Lightbox */
         .nav-btn {
             position: absolute;
             background: var(--surface-color);
@@ -260,14 +386,21 @@
         }
         @media (max-width: 900px) {
             .grid-container { column-count: 2; column-gap: 20px; }
-            header { padding: 15px 25px; }
+            header { padding: 15px 25px; flex-wrap: wrap; gap: 15px; justify-content: center; }
+            h1, .header-actions { flex: initial; }
+            .header-actions { order: 3; position: absolute; right: 25px; }
             main { padding: 0 25px; margin: 30px auto; }
+            .postit-section { padding: 20px; margin: 30px 25px; }
         }
         @media (max-width: 600px) {
             .grid-container { column-count: 1; column-gap: 15px; }
             .grid-item { margin-bottom: 15px; }
             header { padding: 15px 20px; }
+            .header-actions { right: 20px; }
             main { padding: 0 20px; margin: 20px auto; }
+            .postit-section { padding: 20px; margin: 20px; }
+            .postit-form { flex-direction: column; }
+            .postit-form button { padding: 12px; }
             
             .nav-btn { width: 40px; height: 40px; }
             .close-btn { top: 20px; right: 20px; }
@@ -284,60 +417,81 @@
     <header>
         <h1><a href="https://www.instagram.com/4kvisione" target="_blank">4kvisione</a></h1>
         
-        <button class="audio-toggle-btn" id="audio-btn" aria-label="Attiva/Disattiva musica">
-            <svg id="audio-icon" viewBox="0 0 24 24">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-            </svg>
-        </button>
+        <nav class="filter-bar">
+            <button class="filter-btn active" onclick="filterMedia('Images', this)">Images</button>
+            <button class="filter-btn" onclick="filterMedia('Video', this)">Video</button>
+        </nav>
+
+        <div class="header-actions">
+            <button class="audio-toggle-btn" id="audio-btn" aria-label="Attiva/Disattiva musica">
+                <svg id="audio-icon" viewBox="0 0 24 24">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                </svg>
+            </button>
+        </div>
     </header>
 
     <main>
         <div class="grid-container" id="grid-container">
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto1.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto2.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto3.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto4.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto5.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto6.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto7.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto8.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto9.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto10.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto11.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto12.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto13.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto14.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto15.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto16.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto17.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto18.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto19.mp4" autoplay loop muted playsinline></video></div>
-            <div class="grid-item" onclick="openLightbox(this)"><video src="immagini/foto20.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto1.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto2.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto3.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto4.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto5.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto6.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto7.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto8.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto9.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto10.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto11.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto12.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto13.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto14.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto15.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto16.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto17.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto18.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto19.mp4" autoplay loop muted playsinline></video></div>
+            <div class="grid-item video-type" onclick="openLightbox(this)"><video src="immagini/foto20.mp4" autoplay loop muted playsinline></video></div>
 
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto21.webp" alt="Foto 21" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto22.webp" alt="Foto 22" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto23.webp" alt="Foto 23" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto24.webp" alt="Foto 24" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto25.webp" alt="Foto 25" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto26.webp" alt="Foto 26" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto27.webp" alt="Foto 27" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto28.webp" alt="Foto 28" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto29.webp" alt="Foto 29" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto30.webp" alt="Foto 30" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto31.webp" alt="Foto 31" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto32.webp" alt="Foto 32" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto33.webp" alt="Foto 33" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto34.webp" alt="Foto 34" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto35.webp" alt="Foto 35" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto36.webp" alt="Foto 36" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto37.webp" alt="Foto 37" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto38.webp" alt="Foto 38" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto39.webp" alt="Foto 39" loading="lazy"></div>
-            <div class="grid-item" onclick="openLightbox(this)"><img src="immagini/foto40.webp" alt="Foto 40" loading="lazy"></div>
-            
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto21.webp" alt="Foto 21" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto22.webp" alt="Foto 22" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto23.webp" alt="Foto 23" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto24.webp" alt="Foto 24" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto25.webp" alt="Foto 25" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto26.webp" alt="Foto 26" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto27.webp" alt="Foto 27" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto28.webp" alt="Foto 28" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto29.webp" alt="Foto 29" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto30.webp" alt="Foto 30" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto31.webp" alt="Foto 31" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto32.webp" alt="Foto 32" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto33.webp" alt="Foto 33" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto34.webp" alt="Foto 34" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto35.webp" alt="Foto 35" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto36.webp" alt="Foto 36" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto37.webp" alt="Foto 37" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto38.webp" alt="Foto 38" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto39.webp" alt="Foto 39" loading="lazy"></div>
+            <div class="grid-item image-type" onclick="openLightbox(this)"><img src="immagini/foto40.webp" alt="Foto 40" loading="lazy"></div>
         </div>
     </main>
+
+    <section class="postit-section">
+        <div class="postit-header">
+            <h2>Lascia un segno</h2>
+            <p>Scrivi un commento e incollalo sulla bacheca!</p>
+        </div>
+        
+        <div class="postit-form">
+            <input type="text" id="postit-input" placeholder="Scrivi un messaggio..." maxlength="80">
+            <button onclick="aggiungiPostIt()">Incolla</button>
+        </div>
+
+        <div class="postit-board" id="postit-board">
+            </div>
+    </section>
 
     <div id="lightbox" class="lightbox">
         <div class="lightbox-overlay" onclick="forceCloseLightbox()"></div>
@@ -357,6 +511,31 @@
     </div>
 
     <script>
+        // --- 1. RILEVAZIONE IMMEDIATA DEI MEDIA ROTTI ---
+        // Questa funzione intercetta i file vuoti o non trovati e li contrassegna con classe .broken-media
+        function pulisciMediaRotti() {
+            document.querySelectorAll('.grid-item img').forEach(img => {
+                if (img.complete && img.naturalHeight === 0) {
+                    img.closest('.grid-item').classList.add('broken-media');
+                }
+                img.onerror = function() { 
+                    this.closest('.grid-item').classList.add('broken-media'); 
+                };
+            });
+
+            document.querySelectorAll('.grid-item video').forEach(vid => {
+                if (vid.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+                    vid.closest('.grid-item').classList.add('broken-media');
+                }
+                vid.onerror = function() { 
+                    this.closest('.grid-item').classList.add('broken-media'); 
+                };
+            });
+        }
+        
+        // Eseguiamo subito il check
+        pulisciMediaRotti();
+
         var lightbox = document.getElementById('lightbox');
         var lightboxTarget = document.getElementById('lightbox-target');
         var prevBtn = document.getElementById('prev-button');
@@ -376,9 +555,7 @@
 
         function startMusicOnFirstInteraction() {
             if (bgMusic && bgMusic.paused && !isMutedByUser) {
-                bgMusic.play().catch(function(error) {
-                    console.log("Autoplay bloccato temporaneamente.");
-                });
+                bgMusic.play().catch(function() {});
             }
             document.removeEventListener('click', startMusicOnFirstInteraction);
         }
@@ -399,34 +576,79 @@
             });
         }
 
-        // Shuffle con aggiunta di delay per le animazioni
+        // --- 2. FUNZIONE PER FILTRARE FIXATA ---
+        function filterMedia(type, btnElement) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            if(btnElement) btnElement.classList.add('active');
+
+            const items = document.querySelectorAll('.grid-item');
+            let visibleIndex = 0;
+
+            items.forEach((item) => {
+                // Se il media era difettoso, lo ignoriamo sempre!
+                if (item.classList.contains('broken-media')) {
+                    item.style.display = 'none';
+                    return;
+                }
+
+                const isImage = item.classList.contains('image-type');
+                const isVideo = item.classList.contains('video-type');
+                
+                let show = false;
+                if (type === 'Images' && isImage) show = true;
+                if (type === 'Video' && isVideo) show = true;
+
+                if (show) {
+                    item.style.display = 'inline-block';
+                    item.style.opacity = '0';
+                    item.style.animation = 'none';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Avvisa il browser di ri-calcolare l'altezza delle colonne (FIX GRIGLIA)
+            document.getElementById('grid-container').offsetHeight;
+
+            items.forEach((item) => {
+                if (item.style.display === 'inline-block' && !item.classList.contains('broken-media')) {
+                    // Applica l'animazione di entrata solo per quelli visibili
+                    item.style.animation = `fadeInUp 0.6s ease forwards ${visibleIndex * 0.04}s`;
+                    visibleIndex++;
+                }
+            });
+        }
+
         function shuffleGrid() {
             var container = document.getElementById('grid-container');
             if (!container) return;
-            
             var items = Array.from(container.children);
-            
             for (var i = items.length - 1; i > 0; i--) {
                 var j = Math.floor(Math.random() * (i + 1));
                 container.appendChild(items[j]);
             }
-            
-            // Assegna un delay crescente per l'animazione di entrata
-            items = Array.from(container.children);
-            items.forEach((item, index) => {
-                item.style.animationDelay = `${index * 0.05}s`;
-            });
         }
 
         window.addEventListener('DOMContentLoaded', function() {
             shuffleGrid();
+            
+            // Applica il filtro alla sezione predefinita (Images)
+            const defaultActiveBtn = document.querySelector('.filter-btn.active');
+            setTimeout(() => {
+                filterMedia('Images', defaultActiveBtn);
+            }, 50);
+            
+            caricaPostIt(); 
         });
 
+        // Logica Lightbox
         function openLightbox(element) {
             if (!lightbox || !lightboxTarget) return;
             
-            // Crea una galleria globale con tutti gli elementi visibili
-            currentGroupItems = Array.from(document.querySelectorAll('.grid-item')).filter(el => el.style.display !== 'none');
+            // Crea una galleria globale ignorando i display: none E i broken-media
+            currentGroupItems = Array.from(document.querySelectorAll('.grid-item')).filter(el => 
+                el.style.display !== 'none' && !el.classList.contains('broken-media')
+            );
             currentIndex = currentGroupItems.indexOf(element);
             
             if (currentGroupItems.length > 1) {
@@ -440,11 +662,7 @@
             renderMedia();
             lightbox.style.display = 'block';
             
-            // Piccolo delay per l'animazione di comparsa del lightbox
-            setTimeout(() => {
-                lightbox.classList.add('show');
-            }, 10);
-            
+            setTimeout(() => { lightbox.classList.add('show'); }, 10);
             document.body.style.overflow = 'hidden';
         }
 
@@ -483,29 +701,22 @@
 
         function navigateLightbox(direction) {
             if (currentGroupItems.length <= 1) return;
-            
-            if (direction === 'next') {
-                currentIndex = (currentIndex + 1) % currentGroupItems.length;
-            } else if (direction === 'prev') {
-                currentIndex = (currentIndex - 1 + currentGroupItems.length) % currentGroupItems.length;
-            }
+            if (direction === 'next') currentIndex = (currentIndex + 1) % currentGroupItems.length;
+            else if (direction === 'prev') currentIndex = (currentIndex - 1 + currentGroupItems.length) % currentGroupItems.length;
             renderMedia();
         }
 
         function forceCloseLightbox() {
             if (lightbox && lightboxTarget) {
                 lightbox.classList.remove('show');
-                
                 setTimeout(() => {
                     lightbox.style.display = 'none';
                     lightboxTarget.innerHTML = '';
                     document.body.style.overflow = 'auto';
 
-                    if (bgMusic && musicWasPlayingBeforeVideo && !isMutedByUser) {
-                        bgMusic.play();
-                    }
+                    if (bgMusic && musicWasPlayingBeforeVideo && !isMutedByUser) bgMusic.play();
                     musicWasPlayingBeforeVideo = false;
-                }, 300); // Aspetta la fine della transizione prima di nascondere
+                }, 300);
             }
         }
 
@@ -520,12 +731,55 @@
             }
         });
 
-        document.querySelectorAll('.grid-item img').forEach(img => {
-            img.onerror = function() { this.closest('.grid-item').style.display = 'none'; };
+        /* --- LOGICA POST-IT --- */
+        const postitInput = document.getElementById('postit-input');
+        const postitBoard = document.getElementById('postit-board');
+        const coloriPastello = ['#fdfd96', '#ffb3ba', '#ffdfba', '#baffc9', '#bae1ff'];
+
+        postitInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') aggiungiPostIt();
         });
-        document.querySelectorAll('.grid-item video').forEach(vid => {
-            vid.onerror = function() { this.closest('.grid-item').style.display = 'none'; };
-        });
+
+        function aggiungiPostIt() {
+            const testo = postitInput.value.trim();
+            if (testo === '') return;
+
+            const nuovoPostIt = {
+                testo: testo,
+                colore: coloriPastello[Math.floor(Math.random() * coloriPastello.length)],
+                rotazione: (Math.random() * 10) - 5 
+            };
+
+            creaElementoPostIt(nuovoPostIt);
+            salvaInLocale(nuovoPostIt);
+            postitInput.value = '';
+        }
+
+        function creaElementoPostIt(dati) {
+            const div = document.createElement('div');
+            div.className = 'postit-note';
+            div.textContent = dati.testo;
+            div.style.backgroundColor = dati.colore;
+            div.style.transform = `rotate(${dati.rotazione}deg)`;
+            
+            div.style.opacity = '0';
+            postitBoard.appendChild(div);
+            
+            setTimeout(() => {
+                div.style.opacity = '1';
+            }, 50);
+        }
+
+        function salvaInLocale(dati) {
+            let salvati = JSON.parse(localStorage.getItem('mieiPostIt')) || [];
+            salvati.push(dati);
+            localStorage.setItem('mieiPostIt', JSON.stringify(salvati));
+        }
+
+        function caricaPostIt() {
+            let salvati = JSON.parse(localStorage.getItem('mieiPostIt')) || [];
+            salvati.forEach(dati => creaElementoPostIt(dati));
+        }
     </script>
 
 </body>
